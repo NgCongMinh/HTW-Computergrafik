@@ -23,14 +23,14 @@ public class PlayerController : NetworkBehaviour {
 
 		if(this.transform.position == new Vector3(this.transform.position.x,this.transform.position.y,30))
 		{
- 			x = x * Time.deltaTime * -150.0f;
+ 			x = x * Time.deltaTime * -50.0f;
  		}
  		else
  		{
- 			x = x * Time.deltaTime * 150.0f;
+ 			x = x * Time.deltaTime * 50.0f;
  		}
  		
-        var z = Input.GetAxis("Vertical") * Time.deltaTime * 150.0f;
+        var z = Input.GetAxis("Vertical") * Time.deltaTime * 50.0f;
 
 		transform.Translate(x,0,0);
 		transform.Translate(0,z,0);	
@@ -86,7 +86,15 @@ public class PlayerController : NetworkBehaviour {
 
 	public override void OnStartLocalPlayer()
 	{
-		GetComponent<MeshRenderer>().material.color = Color.blue;
+		//var trans = 0.5f;
+		//	var col = GetComponent<MeshRenderer>().material.color;
+		//col = Color.blue;
+		//col.a = trans;
+		if(this.transform.position.z == 30){
+			GetComponent<MeshRenderer>().material.color = new Color(0,0,1,0.5f);
+		}else{
+			GetComponent<MeshRenderer>().material.color = new Color(1,0,0,0.5f);
+		}
 	}
 
 	void Start()
