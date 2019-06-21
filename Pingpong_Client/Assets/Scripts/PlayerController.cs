@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+
+
 public class PlayerController : NetworkBehaviour {
 
 	// Use this for initialization
 	public GameObject ballPrefab;
 	public Transform ballSpawn;
 
+	private string moveDirection = "";
+
+	public string getMoveDirection(){
+		return moveDirection;
+	}
 
 	// Update is called once per frame
 	void Update ()
@@ -31,6 +38,23 @@ public class PlayerController : NetworkBehaviour {
  		}
  		
         var z = Input.GetAxis("Vertical") * Time.deltaTime * 50.0f;
+
+	        if(Input.GetKeyDown("left")){
+	        	moveDirection = "left";
+	        }else
+	        if(Input.GetKeyDown("right")){
+	        	moveDirection = "right";
+	        }else
+	        if(Input.GetKeyDown("up")){
+	        	moveDirection = "up";
+	        }else
+			if(Input.GetKeyDown("down")){
+				moveDirection = "down";
+			}
+			//else{
+			//	moveDirection = "x";
+			//}
+			
 
 		transform.Translate(x,0,0);
 		transform.Translate(0,z,0);	

@@ -41,6 +41,6 @@ public class ScoreUpdater : MonoBehaviour
         textMesH2.text = p2.ToString();
        // textMesH.text = textMesH.text.Replace(textMesH.text [0].ToString(), "<color=#ff0000ff>" + textMesH.text [0].ToString() + "</color>");       //rot
         //textMesH2.text = textMesH2.text.Replace(textMesH2.text [0].ToString(), "<color=#0000ffff>" + textMesH2.text [0].ToString() + "</color>");      //blau
-        Debug.Log(p1.ToString() + ":" + p2.ToString());
+        //Debug.Log(p1.ToString() + ":" + p2.ToString());
     }
 }
