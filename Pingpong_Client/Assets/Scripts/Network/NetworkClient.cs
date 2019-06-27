@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Model;
 using SocketIO;
+using UnityEditor;
 using UnityEngine;
+using Utils;
 
 namespace Network
 {
@@ -15,6 +18,14 @@ namespace Network
         private Dictionary<string, NetworkIdentity> serverObjects;
 
         public static string ClientId { get; private set; }
+
+        private void Awake()
+        {
+            Settings settings = SettingsReader.ReadSettings();
+            url = settings.serverSetting.getAddress();
+            Debug.Log(url);
+            base.Awake();
+        }
 
         // Start is called before the first frame update
         public override void Start()
