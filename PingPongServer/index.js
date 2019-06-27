@@ -2,7 +2,6 @@ var io = require('socket.io')(process.env.PORT || 52300);
 
 // Custom Classes
 var Player = require('./Classes/Player.js');
-//var Spawn = require('./Classes/Spawn.js');
 
 console.log('Server has started');
 
@@ -25,6 +24,7 @@ io.on('connection', function(socket) {
     socket.emit('spawn', player); // Tell myseld i have spawned
     socket.broadcast.emit('spawn', player);
 
+    console.log(players);
     // Tell myself about everybody else in the game
     players.forEach(function(value, key, map){
         if(key != thisPlayerId){
@@ -35,21 +35,20 @@ io.on('connection', function(socket) {
 
     // Positional Data from Client
     socket.on('updatePosition', function(data){
+        console.log("DATA - " + JSON.stringify(data));
+
         player.position.x = data.position.x;
         player.position.y = data.position.y;
         player.position.z = data.position.z;
 
-        console.log(data);
-        console.log(player);
-
-        socket.broadcast.emit('updatePosition', player);
+        socket.broadcast.emit('updateClientPosition', player);
     });
 
     socket.on('disconnect', function(){
         console.log('Player has disconnect');
-        delete players[thisPlayerId];
-        delete sockets[thisPlayerId];
-        socket.broadcast.emit('disconnect', player);
+        players.delete(thisPlayerId);
+        sockets.delete(thisPlayerId);
+        socket.broadcast.emit('disconnectClient', player);
     });
 
 });
