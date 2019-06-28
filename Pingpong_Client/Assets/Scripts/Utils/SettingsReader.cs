@@ -10,7 +10,10 @@ namespace Utils
 
         public static Settings ReadSettings()
         {
+            // workaround --> else cannot start without unity
+#if UNITY_EDITOR
             AssetDatabase.ImportAsset(SettingsPath);
+#endif
             TextAsset txtAsset = (TextAsset) Resources.Load("settings");
 
             Settings settings = JsonUtility.FromJson<Settings>(txtAsset.text);
