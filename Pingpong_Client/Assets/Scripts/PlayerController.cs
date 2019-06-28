@@ -11,11 +11,9 @@ public class PlayerController : NetworkBehaviour {
 	public GameObject ballPrefab;
 	public Transform ballSpawn;
 
-	private string moveDirection = "";
+		//public float speed = 0.00001f;
 
-	public string getMoveDirection(){
-		return moveDirection;
-	}
+
 
 	// Update is called once per frame
 	void Update ()
@@ -38,29 +36,13 @@ public class PlayerController : NetworkBehaviour {
  		}
  		
         var z = Input.GetAxis("Vertical") * Time.deltaTime * 50.0f;
-
-	        if(Input.GetKeyDown("left")){
-	        	moveDirection = "left";
-	        }else
-	        if(Input.GetKeyDown("right")){
-	        	moveDirection = "right";
-	        }else
-	        if(Input.GetKeyDown("up")){
-	        	moveDirection = "up";
-	        }else
-			if(Input.GetKeyDown("down")){
-				moveDirection = "down";
-			}
-			//else{
-			//	moveDirection = "x";
-			//}
 			
 
 		transform.Translate(x,0,0);
 		transform.Translate(0,z,0);	
 
-		transform.position = new Vector3(Mathf.Clamp(transform.position.x, -18.25f, 18.25f), transform.position.y, transform.position.z);
-		transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -13.25f, 13.25f), transform.position.z);
+		transform.position = new Vector3(Mathf.Clamp(transform.position.x, -15f, 15f), transform.position.y, transform.position.z);
+		transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -11.5f, 11.5f), transform.position.z);
 
 
 		if(Input.GetKeyDown(KeyCode.Space))
@@ -72,18 +54,7 @@ public class PlayerController : NetworkBehaviour {
 	[Command]
 	void CmdFire()
 	{
-		/*
-		if(this.transform.position.z == 30)
-		{
-			ballSpawn.transform.Translate(this.transform.position.x, this.transform.position.y, this.transform.position.z+1);
-			Debug.Log("yo");
-		}
-		else
-		{
-			ballSpawn.transform.Translate(this.transform.position.x, this.transform.position.y, this.transform.position.z+3);
-			Debug.Log("yi");
-		}
-		*/
+
 		if(this.transform.position.z == 30)
 		{
 			ballSpawn.transform.position = new Vector3(ballSpawn.position.x, ballSpawn.position.y, this.transform.position.z-1);
@@ -97,23 +68,25 @@ public class PlayerController : NetworkBehaviour {
 
 		if(this.transform.position.z == 30)
 		{
-			ball.GetComponent<Rigidbody>().velocity = -(ball.transform.forward) * 30;
+			ball.GetComponent<Rigidbody>().velocity = new Vector3 (1f, 1f, -1f);
 		}
 		else
 		{
-			ball.GetComponent<Rigidbody>().velocity = ball.transform.forward * 30;
+			ball.GetComponent<Rigidbody>().velocity = new Vector3 (1f, 1f, 1f);
 		}
-		//Destroy(ball, 5.0f);mm
 		NetworkServer.Spawn(ball);
+
+		float sx = Random.Range(0,2) == 0 ? -1 : 1;
+		float sy = Random.Range(0,2) == 0 ? -1 : 1;
+		float sz = Random.Range(0,2) == 0 ? -1 : 1;
+
+		ball.GetComponent<Rigidbody>().velocity = new Vector3 (30f * sx,30f* sy, 30f * sz);
 
 	}
 
 	public override void OnStartLocalPlayer()
 	{
-		//var trans = 0.5f;
-		//	var col = GetComponent<MeshRenderer>().material.color;
-		//col = Color.blue;
-		//col.a = trans;
+
 		if(this.transform.position.z == 30){
 			GetComponent<MeshRenderer>().material.color = new Color(0,0,1,0.5f);
 		}else{

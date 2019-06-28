@@ -6,50 +6,13 @@ using TMPro;
 public class Baelle : MonoBehaviour {
 
 	ScoreUpdater scoreupdater;
-	public float speed = 100f;
 
 	private PlayerController playercontroller;
 
 	void OnCollisionEnter(Collision col)
 	{
-
-		if(col.gameObject.tag == "Player"){
-
-			playercontroller = col.gameObject.GetComponent<PlayerController>();
-			Debug.Log(playercontroller.getMoveDirection());
-			//if(playercontroller.getMoveDirection() == "right"){
-
-			//}
-
-
-			
-		//	if(col.transform.position.z == 30){
-
-				/*
-				float sx = Random.Range(0,2) == 0 ? -1 : 1;
-				float sy = Random.Range(0,2) == 0 ? -1 : 1;
-				float sz = Random.Range(0,2) == 0 ? -1 : 1;
-				this.GetComponent<Rigidbody>().velocity = new Vector3 (speed * sx, speed * sy, 0.0f);
-			//this.GetComponent<Rigidbody>().velocity = new Vector3 (speed * sx, speed * sy, speed * sz, 0f);
-				//this.GetComponent<Rigidbody>().velocity = -(this.transform.forward) * 30;
-				*/
-			//}else{
-				/*
-				float sx = Random.Range(0,2) == 0 ? -1 : 1;
-				float sy = Random.Range(0,2) == 0 ? -1 : 1;
-				float sz = Random.Range(0,2) == 0 ? -1 : 1;
-				this.GetComponent<Rigidbody>().velocity = new Vector3 (speed * sx, speed * sy, 0.0f);
-				//this.GetComponent<Rigidbody>().velocity = new Vector3 (speed * sx, speed * sy, speed * sz, 0f);
-			//	this.GetComponent<Rigidbody>().velocity = this.transform.forward * 30;
-			*/
-		//	}
-
-		}else if(col.gameObject.tag == "Sidewall"){
-				float sx = Random.Range(0,2) == 0 ? -1 : 1;
-				float sy = Random.Range(0,2) == 0 ? -1 : 1;
-				float sz = Random.Range(0,2) == 0 ? -1 : 1;
-				this.GetComponent<Rigidbody>().velocity = new Vector3 (speed * sx, speed * sy, 0.0f);	
-		}else if(col.gameObject.tag == "Wall"){
+	
+		if(col.gameObject.tag == "Wall"){
 			if(col.transform.position.z == 100){
 				scoreupdater.AddP1();
 				scoreupdater.ScoreAusgeben();
@@ -58,8 +21,7 @@ public class Baelle : MonoBehaviour {
 				scoreupdater.ScoreAusgeben();
 
 			}
-			this.GetComponent<Rigidbody>().velocity = this.transform.forward * 30;
-			//Destroy(gameObject);
+			Destroy(gameObject);
 		}else if(col.gameObject.tag == "Ball"){
 			Destroy(gameObject);
 		}
@@ -70,5 +32,7 @@ public class Baelle : MonoBehaviour {
 		scoreupdater = GameObject.Find("Punktestand").GetComponent<ScoreUpdater>();
 	
 		gameObject.tag = "Ball";
+
+
 	}
 }
