@@ -9,14 +9,11 @@ namespace Menu
 
         public Button joinGameButton;
 
-        public Button settingsButton;
-
         public Button exitButton;
 
         public void Awake()
         {
             joinGameButton.onClick.AddListener(JoinGame);
-            settingsButton.onClick.AddListener(Settings);
             exitButton.onClick.AddListener(Exit);
         }
 
