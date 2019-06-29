@@ -48,13 +48,20 @@ io.on('connection', function(socket) {
 
     // Positional Data from Client
     socket.on('updatePosition', function(data){
-        console.log("DATA - " + JSON.stringify(data));
+        //console.log("DATA - " + JSON.stringify(data));
 
         player.position.x = data.position.x;
         player.position.y = data.position.y;
         player.position.z = data.position.z;
 
         socket.broadcast.emit('updateClientPosition', player);
+    });
+
+    socket.on('spawnBall', function(data){
+        //console.log("DATA - " + JSON.stringify(data));
+
+        socket.emit('updateBallPosition', data);
+        socket.broadcast.emit('updateBallPosition', data);
     });
 
     socket.on('disconnect', function(){
