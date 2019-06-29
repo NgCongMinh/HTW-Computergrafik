@@ -62,7 +62,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1608864747777948}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.1486, y: 0.46478, z: 0}
+  m_LocalPosition: {x: 1.1486, y: 0.46478, z: 30}
   m_LocalScale: {x: 10, y: 7, z: 0.985}
   m_Children:
   - {fileID: 4442925903025038}
@@ -140,10 +140,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkIdentity: {fileID: -5283046548682748634}
-  ballPrefab: {fileID: 1103854202906644, guid: 024af5be413e142cfbfcd367f8eb0f98, type: 3}
   ballSpawn: {fileID: 4442925903025038}
   cooldownTime: 2
   numberOfBalls: 0
+  speed: 50
 --- !u!114 &-6028993026962678087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ee7bbf3ab7dbfa448749d95d16a1b31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 50
+  speed: 30
   networkIdentity: {fileID: -5283046548682748634}
 --- !u!114 &-7339304974670281631
 MonoBehaviour:

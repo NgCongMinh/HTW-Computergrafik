@@ -42,17 +42,6 @@ namespace Player
                 this.transform.position.z + 1
             );
 
-            /*
-            var ball = Instantiate(ballPrefab, ballSpawn.position, ballSpawn.rotation);
-
-            float sx = Random.Range(0, 2) == 0 ? -1 : 1;
-            float sy = Random.Range(0, 2) == 0 ? -1 : 1;
-            float sz = Random.Range(0, 2) == 0 ? -1 : 1;
-
-            Rigidbody body = ball.GetComponent<Rigidbody>();
-            body.velocity = new Vector3(30f * sx, 30f * sy, 30f * sz);
-            */
-
             float sx = Random.Range(0, 2) == 0 ? -1 : 1;
             float sy = Random.Range(0, 2) == 0 ? -1 : 1;
             float sz = Random.Range(0, 2) == 0 ? -1 : 1;

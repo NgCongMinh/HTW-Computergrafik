@@ -66,7 +66,7 @@ namespace Network
                 string id = GetPlayerId(e.data);
                 Debug.Log("SPAWN " + id);
 
-                GameObject gameObject = Instantiate(playerPrefab, networkContainer);
+                GameObject gameObject = Instantiate(playerPrefab);
                 gameObject.name = string.Format("Player ({0})", id);
 
                 // only two players
@@ -97,6 +97,9 @@ namespace Network
 
             On("updateClientPosition", (e) =>
             {
+                Debug.Log("updateClientPosition");
+                Debug.Log(e.data);
+
                 string id = GetPlayerId(e.data);
 
                 float x = Convert.ToSingle(e.data["position"]["x"].str);
@@ -119,7 +122,7 @@ namespace Network
                 // adapt position from enemy
                 GameObject ball = Instantiate(ballPrefab);
                 Rigidbody ballBody = ball.GetComponent<Rigidbody>();
-                
+
                 if (IsOwnPlayer(id))
                 {
                     ballBody.velocity = new Vector3(
@@ -157,6 +160,7 @@ namespace Network
                 : enemyPlayerSpawnPoint.transform.position;
 
             gameObject.transform.position = position;
+            Debug.Log("Spawn Player Position " + playerId + " : " + JsonUtility.ToJson(gameObject.transform.position));
 
             Color playerColor = IsOwnPlayer(playerId) ? new Color(0, 0, 1, 0.5f) : new Color(1, 0, 0, 0.5f);
             gameObject.GetComponent<MeshRenderer>().material.color = playerColor;
@@ -171,7 +175,7 @@ namespace Network
 
         private void PositionPlayer(string playerId, NetworkIdentity player, float x, float y, float z)
         {
-            Vector3 position = IsOwnPlayer(playerId) ? new Vector3(x, y, z) : new Vector3((-1) * x, y, z);
+            Vector3 position = IsOwnPlayer(playerId) ? new Vector3(x, y, z) : new Vector3((-1) * x, y, (-1) * z);
 
             player.transform.position = position;
         }

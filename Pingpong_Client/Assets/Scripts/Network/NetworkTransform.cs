@@ -23,7 +23,9 @@ namespace Network
         void Start()
         {
             networkIdentity = GetComponent<NetworkIdentity>();
-            oldPosition = transform.localPosition;
+            
+            oldPosition = transform.position;
+            
             player = new Player();
             player.id = networkIdentity.GetId();
             player.position = new Position("0", "0", "0");
@@ -41,7 +43,7 @@ namespace Network
             {
                 if (Moved())
                 {
-                    oldPosition = transform.localPosition;
+                    oldPosition = transform.position;
                     stillCounter = 0;
                     SendData();
                 }
@@ -60,7 +62,7 @@ namespace Network
 
         private bool Moved()
         {
-            Vector3 newPosition = transform.localPosition;
+            Vector3 newPosition = transform.position;
 
             return (oldPosition != newPosition) && (
                        (Math.Abs(newPosition.x - oldPosition.x) >= ChangedPositionThreshold) ||
@@ -71,11 +73,13 @@ namespace Network
 
         private void SendData()
         {
-            Vector3 position = transform.localPosition;
+            Vector3 position = transform.position;
 
             player.position.x = position.x.ToString();
             player.position.y = position.y.ToString();
             player.position.z = position.z.ToString();
+            
+            Debug.Log("Player Position : " + JsonUtility.ToJson(player));
 
             networkIdentity.GetSocket().Emit("updatePosition", new JSONObject(JsonUtility.ToJson(player)));
         }
