@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Model;
 using SocketIO;
-using UnityEditor;
 using UnityEngine;
 using Utils;
 
@@ -17,13 +16,16 @@ namespace Network
 
         private Dictionary<string, NetworkIdentity> serverObjects;
 
+        [Header("Game Start Handler")] public GameObject ownPlayerSpawnPoint;
+
+        public GameObject enemyPlayerSpawnPoint;
+
         public static string ClientId { get; private set; }
 
         private void Awake()
         {
             Settings settings = SettingsReader.ReadSettings();
             url = settings.serverSetting.getAddress();
-            Debug.Log(url);
             base.Awake();
         }
 
@@ -48,24 +50,30 @@ namespace Network
             {
                 Debug.Log("REGISTER");
 
-                ClientId = getPlayerId(e.data);
+                ClientId = GetPlayerId(e.data);
                 Debug.LogFormat("Our client's Id ({0})", ClientId);
+            });
+
+            On("playerRejected", (e) =>
+            {
+                // TODO 
             });
 
             On("spawn", (e) =>
             {
-                string id = getPlayerId(e.data);
-
+                string id = GetPlayerId(e.data);
                 Debug.Log("SPAWN " + id);
 
                 GameObject gameObject = Instantiate(playerPrefab, networkContainer);
                 gameObject.name = string.Format("Player ({0})", id);
 
-                gameObject.transform.localPosition = new Vector3(
-                    e.data["position"]["x"].f,
-                    e.data["position"]["y"].f,
-                    e.data["position"]["z"].f
-                );
+                // only two players
+                if (serverObjects.Count >= 2)
+                {
+                    return;
+                }
+
+                SpawnPlayer(gameObject, id);
 
                 NetworkIdentity networkIdentity = gameObject.GetComponent<NetworkIdentity>();
                 networkIdentity.SetControllerId(id);
@@ -78,7 +86,7 @@ namespace Network
             {
                 Debug.Log("DISCONNECT");
 
-                string id = getPlayerId(e.data);
+                string id = GetPlayerId(e.data);
 
                 GameObject gameObject = serverObjects[id].gameObject;
                 Destroy(gameObject);
@@ -87,7 +95,7 @@ namespace Network
 
             On("updateClientPosition", (e) =>
             {
-                string id = getPlayerId(e.data);
+                string id = GetPlayerId(e.data);
 
                 float x = Convert.ToSingle(e.data["position"]["x"].str);
                 float y = Convert.ToSingle(e.data["position"]["y"].str);
@@ -95,13 +103,49 @@ namespace Network
 
                 NetworkIdentity networkIdentity = serverObjects[id];
 
-                networkIdentity.transform.localPosition = new Vector3(x, y, z);
+                PositionPlayer(id, networkIdentity, x, y, z);
             });
         }
 
-        private string getPlayerId(JSONObject data)
+        private void SpawnPlayer(GameObject gameObject, string playerId)
+        {
+            // place own player in front of the camera
+            Vector3 position = IsOwnPlayer(playerId)
+                ? ownPlayerSpawnPoint.transform.position
+                : enemyPlayerSpawnPoint.transform.position;
+
+            gameObject.transform.position = new Vector3(
+                position.x,
+                position.y,
+                position.z
+            );
+
+            Color playerColor = IsOwnPlayer(playerId) ? new Color(0, 0, 1, 0.5f) : new Color(1, 0, 0, 0.5f);
+            gameObject.GetComponent<MeshRenderer>().material.color = playerColor;
+
+            // camera position
+            if (IsOwnPlayer(playerId))
+            {
+                Camera.main.transform.position =
+                    gameObject.transform.position - gameObject.transform.forward * 20 + gameObject.transform.up * 3;
+            }
+        }
+
+        private void PositionPlayer(string playerId, NetworkIdentity player, float x, float y, float z)
+        {
+            Vector3 position = IsOwnPlayer(playerId) ? new Vector3(x, y, z) : new Vector3((-1) * x, y, z);
+            
+            player.transform.position = position;
+        }
+
+        private string GetPlayerId(JSONObject data)
         {
             return data["id"].ToString().Replace("\"", "");
+        }
+
+        private bool IsOwnPlayer(string playerId)
+        {
+            return ClientId == playerId;
         }
     }
 

@@ -42,10 +42,9 @@ GameObject:
   - component: {fileID: 33992684419875430}
   - component: {fileID: 23786863594063158}
   - component: {fileID: 65649617665833946}
-  - component: {fileID: 114545972845768754}
-  - component: {fileID: -2283958995161335108}
-  - component: {fileID: 114802126743879906}
-  - component: {fileID: 114980320030840108}
+  - component: {fileID: -6028993026962678087}
+  - component: {fileID: -7339304974670281631}
+  - component: {fileID: -5283046548682748634}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -126,22 +125,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.0131822, y: 0.9821809, z: 0}
   m_Center: {x: 0.003965378, y: -0.0113571035, z: 0.086551495}
---- !u!114 &114545972845768754
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1608864747777948}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca546111c4e914072a3c321c978553d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ballPrefab: {fileID: 1103854202906644, guid: 024af5be413e142cfbfcd367f8eb0f98, type: 3}
-  ballSpawn: {fileID: 4442925903025038}
-  speed: 100
---- !u!114 &-2283958995161335108
+--- !u!114 &-6028993026962678087
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -153,9 +137,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ee7bbf3ab7dbfa448749d95d16a1b31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 4
-  networkIdentity: {fileID: 0}
---- !u!114 &114802126743879906
+  speed: 50
+  networkIdentity: {fileID: -5283046548682748634}
+--- !u!114 &-7339304974670281631
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -164,31 +148,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1608864747777948}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8258ea15b8f74c4889ce485d21cbbb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ae4c237f6f01ad45ac03e65287699bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 0
-    i1: 0
-    i2: 0
-    i3: 0
-    i4: 0
-    i5: 0
-    i6: 0
-    i7: 0
-    i8: 0
-    i9: 0
-    i10: 0
-    i11: 0
-    i12: 0
-    i13: 0
-    i14: 0
-    i15: 0
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
---- !u!114 &114980320030840108
+  oldPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &-5283046548682748634
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -197,16 +161,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 1608864747777948}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13d6c522af31447398568cc65334232b, type: 3}
+  m_Script: {fileID: 11500000, guid: 46e813f46a2499f48a6e9339e7452b56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TransformSyncMode: 1
-  m_SendInterval: 0.055555556
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
+  id: 
+  isControlling: 0

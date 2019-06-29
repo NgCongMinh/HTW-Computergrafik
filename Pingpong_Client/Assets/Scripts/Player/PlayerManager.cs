@@ -1,17 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Network;
+﻿using Network;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+    [Header("Data")] [SerializeField] private float speed = 50;
 
-    [Header("Data")]
-    [SerializeField]
-    private float speed = 50;
-
-    [Header("Class Reference")]
-    [SerializeField]
+    [Header("Class Reference")] [SerializeField]
     private NetworkIdentity networkIdentity;
 
     // Update is called once per frame
@@ -27,8 +21,13 @@ public class PlayerManager : MonoBehaviour
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
-           
+        
         transform.position += new Vector3(horizontal, vertical, 0) * speed * Time.deltaTime;
+
+        transform.position = new Vector3(
+            Mathf.Clamp(transform.position.x, -15f, 15f),
+            Mathf.Clamp(transform.position.y, -11.5f, 11.5f),
+            transform.position.z
+        );
     }
-    
 }
