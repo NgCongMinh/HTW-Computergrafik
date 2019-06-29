@@ -11,6 +11,11 @@ public class PlayerController : NetworkBehaviour {
 	public GameObject ballPrefab;
 	public Transform ballSpawn;
 
+	public float cooldownTime = 2;
+	private float nextFireTime = 0;
+
+	public int numberOfBalls = 0;
+
 		//public float speed = 0.00001f;
 
 
@@ -18,7 +23,8 @@ public class PlayerController : NetworkBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-		
+		numberOfBalls = GameObject.FindGameObjectsWithTag("Ball").Length;
+
 		if(!isLocalPlayer)
 		{
 			return;
@@ -35,19 +41,23 @@ public class PlayerController : NetworkBehaviour {
  			x = x * Time.deltaTime * 50.0f;
  		}
  		
-        var z = Input.GetAxis("Vertical") * Time.deltaTime * 50.0f;
+        var y = Input.GetAxis("Vertical") * Time.deltaTime * 50.0f;
 			
 
 		transform.Translate(x,0,0);
-		transform.Translate(0,z,0);	
+		transform.Translate(0,y,0);	
 
 		transform.position = new Vector3(Mathf.Clamp(transform.position.x, -15f, 15f), transform.position.y, transform.position.z);
 		transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -11.5f, 11.5f), transform.position.z);
 
 
-		if(Input.GetKeyDown(KeyCode.Space))
+		if(Time.time > nextFireTime && numberOfBalls < 6)		//max 6 bälle ingame und alle 2 sekunden darf ein ball geschossen werden
 		{
-			CmdFire();
+			if(Input.GetKeyDown(KeyCode.Space))
+			{
+				nextFireTime = Time.time + cooldownTime;
+				CmdFire();
+			}
 		}
 	}
 
@@ -74,7 +84,6 @@ public class PlayerController : NetworkBehaviour {
 		{
 			ball.GetComponent<Rigidbody>().velocity = new Vector3 (1f, 1f, 1f);
 		}
-		NetworkServer.Spawn(ball);
 
 		float sx = Random.Range(0,2) == 0 ? -1 : 1;
 		float sy = Random.Range(0,2) == 0 ? -1 : 1;
@@ -82,6 +91,7 @@ public class PlayerController : NetworkBehaviour {
 
 		ball.GetComponent<Rigidbody>().velocity = new Vector3 (30f * sx,30f* sy, 30f * sz);
 
+		NetworkServer.Spawn(ball);
 	}
 
 	public override void OnStartLocalPlayer()
