@@ -1,5 +1,8 @@
 var io = require('socket.io')(process.env.PORT || 52300);
 
+// constants
+var MAX_PLAYER_NUMBER = 2;
+
 // Custom Classes
 var Player = require('./Classes/Player.js');
 
@@ -15,23 +18,33 @@ io.on('connection', function(socket) {
     var player = new Player();
     var thisPlayerId = player.id;
 
-    players.set(thisPlayerId, player);
-    sockets.set(thisPlayerId, socket);
+    var playerCount = players.size;
+    console.log("PLAYERS : " + playerCount);
+    if (playerCount == MAX_PLAYER_NUMBER) {
+        // disconnect
+        socket.emit('playerRejected', {});
+    } else {
+        players.set(thisPlayerId, player);
+        sockets.set(thisPlayerId, socket);
 
-    // Tell the client that this is our id for the server
-    socket.emit('register', {id: thisPlayerId});
+        // Tell the client that this is our id for the server
+        socket.emit('register', {id: thisPlayerId});
 
-    socket.emit('spawn', player); // Tell myseld i have spawned
-    socket.broadcast.emit('spawn', player);
+        // Tell myseld i have spawned
+        socket.emit('spawn', player);
+        
+        // tell everyone else I spawned
+        socket.broadcast.emit('spawn', player);
 
-    console.log(players);
-    // Tell myself about everybody else in the game
-    players.forEach(function(value, key, map){
-        if(key != thisPlayerId){
-            console.log("Spawn enemy");
-            socket.emit('spawn', value);
-        }
-    });
+        console.log(players);
+        // Tell myself about everybody else in the game
+        players.forEach(function(value, key, map){
+            if(key != thisPlayerId){
+                console.log("Spawn enemy");
+                socket.emit('spawn', value);
+            }
+        });
+    }
 
     // Positional Data from Client
     socket.on('updatePosition', function(data){
