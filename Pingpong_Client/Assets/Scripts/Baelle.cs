@@ -14,14 +14,15 @@ public class Baelle : MonoBehaviour {
 	
 		if(col.gameObject.tag == "Wall"){
 			if(col.transform.position.z == 100){
+				Destroy(gameObject);
 				scoreupdater.AddP1();
 				scoreupdater.ScoreAusgeben();
 			}else{
+				Destroy(gameObject);
 				scoreupdater.AddP2();
 				scoreupdater.ScoreAusgeben();
 
 			}
-			Destroy(gameObject);
 		}else if(col.gameObject.tag == "Ball"){
 			Destroy(gameObject);
 		}
