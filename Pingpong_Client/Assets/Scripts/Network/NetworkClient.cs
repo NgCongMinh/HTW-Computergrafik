@@ -98,13 +98,23 @@ namespace Network
             On("updateClientPosition", (e) =>
             {
                 Debug.Log("updateClientPosition");
-                Debug.Log(e.data);
+                //Debug.Log(e.data);
 
                 string id = GetPlayerId(e.data);
 
-                float x = Convert.ToSingle(e.data["position"]["x"].str);
-                float y = Convert.ToSingle(e.data["position"]["y"].str);
-                float z = Convert.ToSingle(e.data["position"]["z"].str);
+                if(!IsOwnPlayer(id)){
+                    Debug.Log("enemy : " + e.data);
+                }
+
+                float x = Convert.ToSingle(e.data["position"]["x"].str.Replace(",", "."));
+                float y = Convert.ToSingle(e.data["position"]["y"].str.Replace(",", "."));
+                float z = Convert.ToSingle(e.data["position"]["z"].str.Replace(",", "."));
+
+                if(!IsOwnPlayer(id)){
+                    Debug.Log("enemy : " + e.data);
+                    Debug.Log("x : " + x);
+                    Debug.Log("y : " + y);
+                }
 
                 NetworkIdentity networkIdentity = serverObjects[id];
 
@@ -176,6 +186,10 @@ namespace Network
         private void PositionPlayer(string playerId, NetworkIdentity player, float x, float y, float z)
         {
             Vector3 position = IsOwnPlayer(playerId) ? new Vector3(x, y, z) : new Vector3((-1) * x, y, (-1) * z);
+
+            if(!IsOwnPlayer(playerId)){
+                //Debug.Log("enemy : " + JsonUtility.ToJson(position));
+            }
 
             player.transform.position = position;
         }
