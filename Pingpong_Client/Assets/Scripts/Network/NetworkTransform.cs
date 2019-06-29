@@ -26,10 +26,7 @@ namespace Network
             oldPosition = transform.localPosition;
             player = new Player();
             player.id = networkIdentity.GetId();
-            player.position = new Position();
-            player.position.x = "0";
-            player.position.y = "0";
-            player.position.z = "0";
+            player.position = new Position("0", "0", "0");
 
             if (!networkIdentity.IsControlling())
             {
@@ -80,7 +77,6 @@ namespace Network
             player.position.y = position.y.ToString();
             player.position.z = position.z.ToString();
 
-            //Debug.Log(JsonUtility.ToJson(player));
             networkIdentity.GetSocket().Emit("updatePosition", new JSONObject(JsonUtility.ToJson(player)));
         }
     }

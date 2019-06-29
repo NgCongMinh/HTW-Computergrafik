@@ -14,6 +14,8 @@ namespace Network
 
         [SerializeField] private GameObject playerPrefab;
 
+        [SerializeField] public GameObject ballPrefab;
+
         private Dictionary<string, NetworkIdentity> serverObjects;
 
         [Header("Game Start Handler")] public GameObject ownPlayerSpawnPoint;
@@ -105,6 +107,46 @@ namespace Network
 
                 PositionPlayer(id, networkIdentity, x, y, z);
             });
+
+            On("updateBallPosition", (e) =>
+            {
+                Debug.Log("updateBallPosition");
+
+                BallPosition ballPosition = JsonUtility.FromJson<BallPosition>(e.data.ToString());
+
+                string id = GetPlayerId(e.data);
+
+                // adapt position from enemy
+                GameObject ball = Instantiate(ballPrefab);
+                Rigidbody ballBody = ball.GetComponent<Rigidbody>();
+                
+                if (IsOwnPlayer(id))
+                {
+                    ballBody.velocity = new Vector3(
+                        ConvertToFloat(ballPosition.velocity.x),
+                        ConvertToFloat(ballPosition.velocity.y),
+                        ConvertToFloat(ballPosition.velocity.z)
+                    );
+                    ball.transform.position = new Vector3(
+                        ConvertToFloat(ballPosition.position.x),
+                        ConvertToFloat(ballPosition.position.y),
+                        ConvertToFloat(ballPosition.position.z)
+                    );
+                }
+                else
+                {
+                    ballBody.velocity = new Vector3(
+                        (-1) * ConvertToFloat(ballPosition.velocity.x),
+                        ConvertToFloat(ballPosition.velocity.y),
+                        (-1) * ConvertToFloat(ballPosition.velocity.z)
+                    );
+                    ball.transform.position = new Vector3(
+                        (-1) * ConvertToFloat(ballPosition.position.x),
+                        ConvertToFloat(ballPosition.position.y),
+                        (-1) * ConvertToFloat(ballPosition.position.z)
+                    );
+                }
+            });
         }
 
         private void SpawnPlayer(GameObject gameObject, string playerId)
@@ -114,11 +156,7 @@ namespace Network
                 ? ownPlayerSpawnPoint.transform.position
                 : enemyPlayerSpawnPoint.transform.position;
 
-            gameObject.transform.position = new Vector3(
-                position.x,
-                position.y,
-                position.z
-            );
+            gameObject.transform.position = position;
 
             Color playerColor = IsOwnPlayer(playerId) ? new Color(0, 0, 1, 0.5f) : new Color(1, 0, 0, 0.5f);
             gameObject.GetComponent<MeshRenderer>().material.color = playerColor;
@@ -134,7 +172,7 @@ namespace Network
         private void PositionPlayer(string playerId, NetworkIdentity player, float x, float y, float z)
         {
             Vector3 position = IsOwnPlayer(playerId) ? new Vector3(x, y, z) : new Vector3((-1) * x, y, z);
-            
+
             player.transform.position = position;
         }
 
@@ -146,6 +184,11 @@ namespace Network
         private bool IsOwnPlayer(string playerId)
         {
             return ClientId == playerId;
+        }
+
+        private float ConvertToFloat(string value)
+        {
+            return Convert.ToSingle(value);
         }
     }
 
@@ -160,10 +203,26 @@ namespace Network
     [Serializable]
     public class Position
     {
+        public Position(string x, string y, string z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
         public string x;
 
         public string y;
 
         public string z;
+    }
+
+    public class BallPosition
+    {
+        public string id;
+
+        public Position position;
+
+        public Position velocity;
     }
 }
