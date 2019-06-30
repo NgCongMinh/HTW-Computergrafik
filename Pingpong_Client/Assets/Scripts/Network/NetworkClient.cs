@@ -29,10 +29,12 @@ namespace Network
             Settings settings = SettingsReader.ReadSettings();
             url = settings.serverSetting.getAddress();
 
+            
             System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
             customCulture.NumberFormat.NumberDecimalSeparator = ".";
-
+            
             System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
+            
             
             base.Awake();
         }
