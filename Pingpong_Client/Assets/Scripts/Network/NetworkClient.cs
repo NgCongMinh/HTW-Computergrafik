@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
 using Model;
 using SocketIO;
 using UnityEngine;
@@ -29,13 +31,12 @@ namespace Network
             Settings settings = SettingsReader.ReadSettings();
             url = settings.serverSetting.getAddress();
 
-            
-            System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+            CultureInfo customCulture =
+                (CultureInfo) Thread.CurrentThread.CurrentCulture.Clone();
             customCulture.NumberFormat.NumberDecimalSeparator = ".";
-            
-            System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
-            
-            
+
+            Thread.CurrentThread.CurrentCulture = customCulture;
+
             base.Awake();
         }
 
@@ -73,7 +74,7 @@ namespace Network
             {
                 string id = GetPlayerId(e.data);
                 Debug.Log("SPAWN " + id);
-
+                
                 GameObject gameObject = Instantiate(playerPrefab);
                 gameObject.name = string.Format("Player ({0})", id);
 
@@ -106,27 +107,7 @@ namespace Network
             On("updateClientPosition", (e) =>
             {
                 Debug.Log("updateClientPosition");
-                //Debug.Log(e.data);
-
-                string id = GetPlayerId(e.data);
-
-                if(!IsOwnPlayer(id)){
-                    Debug.Log("enemy : " + e.data);
-                }
-
-                float x = Convert.ToSingle(e.data["position"]["x"].str.Replace(",", "."));
-                float y = Convert.ToSingle(e.data["position"]["y"].str.Replace(",", "."));
-                float z = Convert.ToSingle(e.data["position"]["z"].str.Replace(",", "."));
-
-                if(!IsOwnPlayer(id)){
-                    Debug.Log("enemy : " + e.data);
-                    Debug.Log("x : " + x);
-                    Debug.Log("y : " + y);
-                }
-
-                NetworkIdentity networkIdentity = serverObjects[id];
-
-                PositionPlayer(id, networkIdentity, x, y, z);
+                UpdateClientPosition(e.data);
             });
 
             On("updateBallPosition", (e) =>
@@ -178,7 +159,7 @@ namespace Network
                 : enemyPlayerSpawnPoint.transform.position;
 
             gameObject.transform.position = position;
-            Debug.Log("Spawn Player Position " + playerId + " : " + JsonUtility.ToJson(gameObject.transform.position));
+            //Debug.Log("Spawn Player Position " + playerId + " : " + JsonUtility.ToJson(gameObject.transform.position));
 
             Color playerColor = IsOwnPlayer(playerId) ? new Color(0, 0, 1, 0.5f) : new Color(1, 0, 0, 0.5f);
             gameObject.GetComponent<MeshRenderer>().material.color = playerColor;
@@ -191,14 +172,22 @@ namespace Network
             }
         }
 
+        private void UpdateClientPosition(JSONObject body)
+        {
+            string id = GetPlayerId(body);
+
+            float x = Convert.ToSingle(body["position"]["x"].str.Replace(",", "."));
+            float y = Convert.ToSingle(body["position"]["y"].str.Replace(",", "."));
+            float z = Convert.ToSingle(body["position"]["z"].str.Replace(",", "."));
+
+            NetworkIdentity networkIdentity = serverObjects[id];
+
+            PositionPlayer(id, networkIdentity, x, y, z);
+        }
+
         private void PositionPlayer(string playerId, NetworkIdentity player, float x, float y, float z)
         {
             Vector3 position = IsOwnPlayer(playerId) ? new Vector3(x, y, z) : new Vector3((-1) * x, y, (-1) * z);
-
-            if(!IsOwnPlayer(playerId)){
-                //Debug.Log("enemy : " + JsonUtility.ToJson(position));
-            }
-
             player.transform.position = position;
         }
 

@@ -79,7 +79,7 @@ namespace Network
             player.position.y = position.y.ToString();
             player.position.z = position.z.ToString();
             
-            Debug.Log("Player Position : " + JsonUtility.ToJson(player));
+            //Debug.Log("Player Position : " + JsonUtility.ToJson(player));
 
             networkIdentity.GetSocket().Emit("updatePosition", new JSONObject(JsonUtility.ToJson(player)));
         }

@@ -1,39 +1,42 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Model;
 using UnityEngine;
-using TMPro;
 
-public class Baelle : MonoBehaviour {
+public class Baelle : MonoBehaviour
+{
+    private ScoreUpdater scoreUpdater;
 
-	ScoreUpdater scoreupdater;
+    private PlayerController playercontroller;
 
-	private PlayerController playercontroller;
+    void Start()
+    {
+        scoreUpdater = (ScoreUpdater) FindObjectOfType(typeof(ScoreUpdater));
 
-	void OnCollisionEnter(Collision col)
-	{
-	
-		if(col.gameObject.tag == "Wall"){
-			if(col.transform.position.z == 100){
-				Destroy(gameObject);
-				scoreupdater.AddP1();
-				scoreupdater.ScoreAusgeben();
-			}else{
-				Destroy(gameObject);
-				scoreupdater.AddP2();
-				scoreupdater.ScoreAusgeben();
+        gameObject.tag = "Ball";
+    }
 
-			}
-		}else if(col.gameObject.tag == "Ball"){
-			Destroy(gameObject);
-		}
-		
-	}
-
-	void Start(){
-		scoreupdater = GameObject.Find("Punktestand").GetComponent<ScoreUpdater>();
-	
-		gameObject.tag = "Ball";
-
-
-	}
+    private void OnCollisionEnter(Collision col)
+    {
+        if (scoreUpdater.IsGameFinished())
+        {
+            return;
+        }
+        
+        if (col.gameObject.tag == "Wall")
+        {
+            if (col.transform.position.z == 100)
+            {
+                Destroy(gameObject);
+                scoreUpdater.IncrementPlayerScore(PlayerType.Self);
+            }
+            else
+            {
+                Destroy(gameObject);
+                scoreUpdater.IncrementPlayerScore(PlayerType.Enemy);
+            }
+        }
+        else if (col.gameObject.tag == "Ball")
+        {
+            Destroy(gameObject);
+        }
+    }
 }

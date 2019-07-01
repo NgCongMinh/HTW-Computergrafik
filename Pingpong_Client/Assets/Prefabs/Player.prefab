@@ -143,7 +143,6 @@ MonoBehaviour:
   ballSpawn: {fileID: 4442925903025038}
   cooldownTime: 2
   numberOfBalls: 0
-  speed: 50
 --- !u!114 &-6028993026962678087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ee7bbf3ab7dbfa448749d95d16a1b31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 30
+  speed: 0
   networkIdentity: {fileID: -5283046548682748634}
 --- !u!114 &-7339304974670281631
 MonoBehaviour:
