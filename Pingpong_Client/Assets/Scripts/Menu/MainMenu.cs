@@ -14,7 +14,7 @@ namespace Menu
         public void Awake()
         {
             joinGameButton.onClick.AddListener(JoinGame);
-            exitButton.onClick.AddListener(Exit);
+            //exitButton.onClick.AddListener(Exit);
         }
 
         public void JoinGame()
