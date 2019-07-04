@@ -1,7 +1,7 @@
 {
   "serverSetting": {
     "protocol": "ws://",
-    "baseUrl": "141.45.211.138:52300",
+    "baseUrl": "localhost:52300",
     "suffix": "/socket.io/?EIO=4&transport=websocket"
   }
 }
